@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-configmap
+  namespace: bermtec
+data:
+  APP_CONFIG: value_from_configmap

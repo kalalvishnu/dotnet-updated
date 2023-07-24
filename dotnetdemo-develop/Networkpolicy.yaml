@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: dotnetdemo-network-policy
+  namespace: bermtec
+spec:
+  podSelector:
+    matchLabels:
+      app: dotnet
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    # Allow incoming traffic from pods in the same namespace with the label "app: dotnetdemo"
+    - from:
+      - podSelector:
+          matchLabels:
+            app: dotnet
+  egress:
+    # Allow outgoing traffic to pods in the same namespace with the label "app: dotnetdemo"
+    - to:
+      - podSelector:
+          matchLabels:
+            app: dotnet

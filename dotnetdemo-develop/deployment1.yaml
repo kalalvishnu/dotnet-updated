@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet
+  namespace: bermtec
+  labels:
+    app: dotnet
+spec:
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: dotnet
+  template:
+    metadata:
+      labels:
+        app: dotnet
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: project
+                operator: In
+                values:
+                - cis
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                - key: disktype
+                  operator: In
+                  values:
+                  - ssd
+      containers:
+      - name: dotnet
+        image: dockercontainerregistary.azurecr.io/newdot:1.0
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "200m"
+            memory: "300Mi"
+          requests:
+            cpu: "100m"
+            memory: "300Mi"
+        livenessProbe:
+          exec:
+            command:
+            - ls
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          failureThreshold: 3
+          successThreshold: 1
+        readinessProbe:
+          exec:
+            command:
+            - ls
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+          timeoutSeconds: 2
+      imagePullSecrets:
+        - name: new-secret

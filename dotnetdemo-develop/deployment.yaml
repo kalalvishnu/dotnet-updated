@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet
+  namespace: bermtec
+  labels:
+    app: dotnet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dotnet
+  template:
+    metadata:
+      labels:
+        app: dotnet
+    spec:
+      imagePullSecrets:
+        - name: my-acr-key
+      containers:
+        - name: dotnet
+          image: dockercontainerregistary.azurecr.io/dotnet:1.0
+          ports:
+            - containerPort: 5000
