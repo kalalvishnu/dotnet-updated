@@ -19,7 +19,7 @@ variables:
   imagePullSecret: 'azcontainerdevf15b-auth'
 
   # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  vmImageName: 'test'
 
 
 stages:
